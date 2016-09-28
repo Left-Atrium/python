@@ -4,10 +4,8 @@ import pandas as pd
 import tushare as ts
 import ma
 
-def macd(stock='600000',fastperiod=12, slowperiod=26, signalperiod=9):
-	data = ts.get_h_data(stock, start='2016-07-01').sort()
-
-	price = np.array(data['close'].values)
+def macd(stock,fastperiod=12, slowperiod=26, signalperiod=9):
+	price = np.array(stock['close'].values)
 	
 	ewma12 = ma.ma(stock)['ema12']
 	ewma26 = pd.ewma(price,span=slowperiod,adjust=False)
@@ -15,9 +13,9 @@ def macd(stock='600000',fastperiod=12, slowperiod=26, signalperiod=9):
 	dea = pd.ewma(dif,span=signalperiod,adjust=False)
 	bar = (dif-dea)*2
 
-	data['diff'] = dif
-	data['dea'] = dea
-	data['macd'] = bar
+	stock['diff'] = dif
+	stock['dea'] = dea
+	stock['macd'] = bar
 
-	return data
+	return stock
 
